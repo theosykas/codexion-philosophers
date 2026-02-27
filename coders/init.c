@@ -3,25 +3,55 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: theo <theo@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: thsykas <thsykas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/26 21:07:26 by theo              #+#    #+#             */
-/*   Updated: 2026/02/26 21:07:37 by theo             ###   ########.fr       */
+/*   Updated: 2026/02/27 15:30:18 by thsykas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
 
-int init_table(t_tabe *table, char **av)
+int	init_coders(t_table *table)
 {
-	if (!table->all_coders)
-		return (0);
-	return (1);
+	int	i;
+
+	i = -1;
+	while (++i < table->nb_coders)
+	{
+		table->coders[i].id_coders = i + 1; // id_1/2.. start 1
+		table->coders[i].nb_compile = 0;
+		table->coders[i].last_compile = get_time();
+		table->coders[i].table = table; // acces a toutes la table
+		if (pthread_mutex_init(&table->coders[i].mutex, NULL) != 0) // init utilisation lock
+			return (1);
+	}
+	return (0);
 }
 
-int init_coders(t_coders *coders, char **av)
+int	init_dongle(t_table *table)
 {
-	if (!coders->id_coders)
-		return (0);
-	return (1);
+	int	i;
+
+	i = -1;
+	while (++i < table->nb_coders)
+	{
+		table->dongles[i].id_dongle = i + 1;
+		table->dongles[i].cool_down = 0;
+		table->dongles[i].is_used = false;
+		if (pthread_mutex_init(&table->dongles[i].mutex, NULL) != 0)
+			return (1);
+	}
+	return (0);
+}
+
+int	init_table(t_table *table)
+{
+	table->coders = ft_calloc(sizeof(t_coders), table->nb_coders);
+	if (!table->coders)
+		return (1);
+	table->dongles = ft_calloc(sizeof(t_dongles), table->nb_coders);
+	if (!table->dongles)
+		return (1);
+	return (0);
 }

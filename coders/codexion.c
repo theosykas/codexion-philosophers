@@ -3,21 +3,38 @@
 /*                                                        :::      ::::::::   */
 /*   codexion.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: theo <theo@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: thsykas <thsykas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/26 19:55:43 by theo              #+#    #+#             */
-/*   Updated: 2026/02/26 20:34:12 by theo             ###   ########.fr       */
+/*   Updated: 2026/02/27 16:08:59 by thsykas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
+
+int parse_args(t_arg *arg, int ac, char **av)
+{
+	(void)ac;
+	arg->nb_coders = atoi(av[1]);
+	arg->time_to_burn_out = atoi(av[2]);
+	arg->time_to_compile = atoi(av[3]);
+	arg->time_to_debug = atoi(av[4]);
+	arg->time_to_refactor = atoi(av[5]);
+	arg->number_of_compiles_required = atoi(av[6]);
+	arg->dongle_cooldown = atoi(av[7]);
+	return (0);
+}
 
 int check_args(int ac, char **av)
 {
 	int i;
 
 	i = 1;
-	(void)ac;
+	if (ac != 9)
+	{
+		fprintf(stderr, "Error");
+		return (EXIT_FAILURE);
+	}
 	while (i <= 7)
 	{
 		if (!is_num_param(av[i]))
@@ -27,30 +44,30 @@ int check_args(int ac, char **av)
 		}
 		i++;
 	}
-	// if (ft_strcmp(av[8], "FIFO") != 0 && ft_strcmp(av[8], "EDF") != 0)
-	// {
-	// 	fprintf(stderr, "Error input you need to FIFO or EDF\n");
-	// 	return (false);
-	// }
+	if (strcmp(av[8], "FIFO") != 0 && strcmp(av[8], "EDF") != 0)
+	{
+		fprintf(stderr, "Error input you need to FIFO or EDF\n");
+		return (false);
+	}
 	return (0);
 }
 
-
 int main(int ac, char **av)
 {
-	int count_coders;
-	
-	if (ac < 2)
+	t_table	table;
+
+	if (ac != 9)
 	{
-		fprintf(stderr, "Error");
+		fprintf(stderr, "Error invalid input\n");
 		return (EXIT_FAILURE);
 	}
-	if (!check_args(ac, av))
+	if (check_args(ac, av) != 0)
 		return (EXIT_FAILURE);
-	count_coders = (nb_coders(av[1]));
-	fprintf(stderr, "nb coders %d", count_coders);
+	parse_args(&table.arg, ac, av);
+	table.nb_coders = table.arg.nb_coders;
+	init_table(&table);
+	init_coders(&table);
+	init_dongle(&table);
+	start_thread(&table);
 	return (EXIT_FAILURE);
 }
-
-
-	//char *sceduleur_type;

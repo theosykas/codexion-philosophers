@@ -1,14 +1,14 @@
 NAME = codexion
 
 CC = cc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -Icoders -fsanitize=address
 RM = rm -f
 
-SRCS = coders/garbage_collector.c \
-		coders/codexion.c \
+SRCS = coders/codexion.c \
 		coders/utils.c \
 		coders/parser.c \
-		coders/init.c
+		coders/init.c \
+		coders/threads.c
 
 OBJS = $(SRCS:.c=.o)
 

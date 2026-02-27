@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: theo <theo@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: thsykas <thsykas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/26 19:56:00 by theo              #+#    #+#             */
-/*   Updated: 2026/02/26 21:07:24 by theo             ###   ########.fr       */
+/*   Updated: 2026/02/27 13:42:01 by thsykas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,22 +14,17 @@
 
 int get_time(void)
 {
-	int time;
+	long			time_in_ms;
+	struct timeval	tv;
 
-	return (time);
-}
-
-void *coders_routine(void)
-{
-	while (1);
-	{
-		//routine take compiling ..
-	}
+	if (gettimeofday(&tv, NULL))
+		return (0);
+	time_in_ms = (tv.tv_sec * 1000L) + (tv.tv_usec / 1000);
+	return (time_in_ms);
 }
 
 int check_coders(char *coder)
 {
-	int i = 0;
 	int nb_coders;
 
 	nb_coders = atoi(coder);

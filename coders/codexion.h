@@ -2,40 +2,74 @@
 #define CODEXION_H
 
 # include <stdlib.h>
+# include <string.h>
 # include <unistd.h>
 # include <stdio.h>
 # include <pthread.h>
 # include <stdbool.h>
+# include <sys/time.h>
+# include <stdint.h>
+# include <unistd.h>
+# include <stddef.h>
 
-typedef struct s_coders {
-	int 			id_coders;
-	pthread_mutex_t	*right;
-	pthread_mutex_t	*left;
-	struct s_tabe 	*table;
+typedef struct s_coders { // 1 coders/son_mutex
+	int				id_coders;
+	int				nb_compile;
+	int				last_compile;
+	pthread_t		thread;
+	pthread_mutex_t	mutex;
+	struct s_table	*table;
 }	t_coders;
 
 
-typedef struct s_tabe {
-	int 			nb_coders;
-	pthread_mutex_t *all_dongles;
-	t_coders 		*all_coders;
-}	t_tabe;
+typedef struct s_dongles {
+	long			cool_down;
+	int				id_dongle;
+	bool			is_used;
+	pthread_mutex_t mutex;
+}	t_dongles;
 
-int main(int ac, char **av);
-int check_args(int ac, char **av);
+typedef struct s_arg {
+	int		nb_coders;
+	int		time_to_burn_out;
+	int		time_to_compile;
+	int		time_to_debug;
+	int		time_to_refactor;
+	int		number_of_compiles_required;
+	int		dongle_cooldown;
+	char	*scheduler;
+}	t_arg;
+
+typedef struct s_table {
+	int				nb_coders;
+	t_arg			arg;
+	t_coders		*coders;
+	t_dongles		*dongles;
+}	t_table;
+
+
+int		main(int ac, char **av);
+int		check_args(int ac, char **av);
+int		parse_args(t_arg *arg, int ac, char **av);
 
 //parser.c
-int check_coders(char *coder);
+int		check_coders(char *coder);
+int		get_time(void);
 
 //utils.c
-int	ft_isdigit(int c);
-int is_num_param(char *str);
-int ft_strcmp(char *s1, char *s2);
+int		ft_isdigit(int c);
+int		is_num_param(char *str);
+void	*ft_calloc(size_t count, size_t size);
+void	ft_bzero(void *s, size_t n);
 
+//thread.c
+void	*coders_routine(void *arg);
+int		start_thread(t_table *table);
 
 //init.c
-int init_table(t_tabe *table, char **av);
-int init_coders(t_coders *coders, char **av);
+int		init_coders(t_table *table);
+int		init_dongle(t_table *table);
+int		init_table(t_table *table);
 
 #endif
 
