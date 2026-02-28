@@ -6,7 +6,7 @@
 /*   By: thsykas <thsykas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/26 19:55:43 by theo              #+#    #+#             */
-/*   Updated: 2026/02/27 16:08:59 by thsykas          ###   ########.fr       */
+/*   Updated: 2026/02/28 18:10:31 by thsykas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,10 +44,10 @@ int check_args(int ac, char **av)
 		}
 		i++;
 	}
-	if (strcmp(av[8], "FIFO") != 0 && strcmp(av[8], "EDF") != 0)
+	if (strcmp(av[8], "fifo") != 0 && strcmp(av[8], "edf") != 0)
 	{
-		fprintf(stderr, "Error input you need to FIFO or EDF\n");
-		return (false);
+		fprintf(stderr, "Error input you need to fifo or edf\n");
+		return (1);
 	}
 	return (0);
 }
@@ -61,11 +61,12 @@ int main(int ac, char **av)
 		fprintf(stderr, "Error invalid input\n");
 		return (EXIT_FAILURE);
 	}
-	if (check_args(ac, av) != 0)
+	if (check_args(ac, av))
 		return (EXIT_FAILURE);
 	parse_args(&table.arg, ac, av);
 	table.nb_coders = table.arg.nb_coders;
 	init_table(&table);
+	table.time = get_time();
 	init_coders(&table);
 	init_dongle(&table);
 	start_thread(&table);

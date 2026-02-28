@@ -12,15 +12,6 @@
 # include <unistd.h>
 # include <stddef.h>
 
-typedef struct s_coders { // 1 coders/son_mutex
-	int				id_coders;
-	int				nb_compile;
-	int				last_compile;
-	pthread_t		thread;
-	pthread_mutex_t	mutex;
-	struct s_table	*table;
-}	t_coders;
-
 
 typedef struct s_dongles {
 	long			cool_down;
@@ -28,6 +19,18 @@ typedef struct s_dongles {
 	bool			is_used;
 	pthread_mutex_t mutex;
 }	t_dongles;
+
+//un coder == 2 dongle /codrs==pointeur vers 2 dongles
+typedef struct s_coders { // 1 coders/son_mutex
+	int				id_coders;
+	int				nb_compile;
+	int				last_compile;
+	t_dongles		*left_dongle;
+	t_dongles		*right_dongle;
+	pthread_t		thread;
+	pthread_mutex_t	mutex;
+	struct s_table	*table;
+}	t_coders;
 
 typedef struct s_arg {
 	int		nb_coders;
@@ -45,6 +48,7 @@ typedef struct s_table {
 	t_arg			arg;
 	t_coders		*coders;
 	t_dongles		*dongles;
+	long			time;
 }	t_table;
 
 
@@ -54,7 +58,7 @@ int		parse_args(t_arg *arg, int ac, char **av);
 
 //parser.c
 int		check_coders(char *coder);
-int		get_time(void);
+long	get_time(void);
 
 //utils.c
 int		ft_isdigit(int c);
@@ -63,13 +67,16 @@ void	*ft_calloc(size_t count, size_t size);
 void	ft_bzero(void *s, size_t n);
 
 //thread.c
-void	*coders_routine(void *arg);
 int		start_thread(t_table *table);
 
 //init.c
 int		init_coders(t_table *table);
 int		init_dongle(t_table *table);
 int		init_table(t_table *table);
+
+//routine.c
+void	take_dongle(t_coders *coders);
+void	*coders_routine(void *arg);
 
 #endif
 

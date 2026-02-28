@@ -6,24 +6,11 @@
 /*   By: thsykas <thsykas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/26 21:09:11 by theo              #+#    #+#             */
-/*   Updated: 2026/02/27 15:45:52 by thsykas          ###   ########.fr       */
+/*   Updated: 2026/02/28 13:15:20 by thsykas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
-
-void	*coders_routine(void *arg)
-{
-	t_coders	*coders = (t_coders *)arg;
-	// long		time_past;
-
-	// while (1)
-	// {
-	// 	time_past = get_time() - coders->last_compile;
-	// }
-	printf("hello first_thread %d\n", coders->id_coders);
-	return (NULL);
-}
 
 //table contient tout coders/dongle.. central
 int	start_thread(t_table *table)
