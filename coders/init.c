@@ -6,7 +6,7 @@
 /*   By: thsykas <thsykas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/26 21:07:26 by theo              #+#    #+#             */
-/*   Updated: 2026/02/28 17:41:24 by thsykas          ###   ########.fr       */
+/*   Updated: 2026/03/02 09:30:53 by thsykas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,13 +50,6 @@ int	init_dongle(t_table *table)
 int	init_table(t_table *table)
 {
 	table->time = get_time();
-	if (table->time == 0)
-	{
-		printf("Error\n");
-		return (1);
-	}
-	else
-		printf("\n\n%ld time current\n\n", table->time);
 	table->coders = ft_calloc(sizeof(t_coders), table->nb_coders);
 	if (!table->coders)
 		return (1);

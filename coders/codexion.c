@@ -6,11 +6,17 @@
 /*   By: thsykas <thsykas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/26 19:55:43 by theo              #+#    #+#             */
-/*   Updated: 2026/02/28 18:10:31 by thsykas          ###   ########.fr       */
+/*   Updated: 2026/03/02 08:49:56 by thsykas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
+
+void	free_and_exit(t_table *table)
+{
+	free(table->dongles);
+	free(table->coders);
+}
 
 int parse_args(t_arg *arg, int ac, char **av)
 {
@@ -66,9 +72,9 @@ int main(int ac, char **av)
 	parse_args(&table.arg, ac, av);
 	table.nb_coders = table.arg.nb_coders;
 	init_table(&table);
-	table.time = get_time();
 	init_coders(&table);
 	init_dongle(&table);
 	start_thread(&table);
+	free_and_exit(&table);
 	return (EXIT_FAILURE);
 }

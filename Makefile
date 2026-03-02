@@ -1,7 +1,7 @@
 NAME = codexion
 
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -Icoders
+CFLAGS = -Wall -Wextra -Werror -Icoders -fsanitize=address
 RM = rm -f
 
 ##-fsanitize=address

@@ -38,33 +38,34 @@ typedef struct s_arg {
 	int		time_to_compile;
 	int		time_to_debug;
 	int		time_to_refactor;
-	int		number_of_compiles_required;
 	int		dongle_cooldown;
 	char	*scheduler;
+	int		number_of_compiles_required;
 }	t_arg;
 
 typedef struct s_table {
 	int				nb_coders;
-	t_arg			arg;
 	t_coders		*coders;
 	t_dongles		*dongles;
 	long			time;
+	t_arg			arg;
 }	t_table;
 
-
-int		main(int ac, char **av);
-int		check_args(int ac, char **av);
+//codexion.c
 int		parse_args(t_arg *arg, int ac, char **av);
+int		check_args(int ac, char **av);
+void	free_and_exit(t_table *table);
+int		main(int ac, char **av);
 
 //parser.c
 int		check_coders(char *coder);
 long	get_time(void);
 
 //utils.c
-int		ft_isdigit(int c);
-int		is_num_param(char *str);
 void	*ft_calloc(size_t count, size_t size);
 void	ft_bzero(void *s, size_t n);
+int		is_num_param(char *str);
+int		ft_isdigit(int c);
 
 //thread.c
 int		start_thread(t_table *table);
@@ -75,13 +76,9 @@ int		init_dongle(t_table *table);
 int		init_table(t_table *table);
 
 //routine.c
+void	print_state(t_coders *coders, char *state);
 void	take_dongle(t_coders *coders);
 void	*coders_routine(void *arg);
+int		is_active(t_coders *coders);
 
 #endif
-
-// 0 1 has taken a dongle  prend une fourchette (0 == temps) (1 == coders id_1)
-// 1 1 has taken a dongle attend une fourchhette (1 == 10000ms) (1 == coders id_1)
-// 2 1 is compiling commence a compiler
-// 201 1 is debugging 201ms apres coders id_1 __arm_legacy_debug_state
-
