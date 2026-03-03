@@ -1,7 +1,7 @@
 NAME = codexion
 
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -Icoders -fsanitize=address
+CFLAGS = -Wall -Wextra -Werror -Icoders -pthread 
 RM = rm -f
 
 ##-fsanitize=address
@@ -30,6 +30,9 @@ clean:
 
 fclean: clean
 	@$(RM) $(NAME)
+
+# sanitize: CFLAGS += -g -fsanitize=thread
+# sanitize: re
 
 re: fclean all
 

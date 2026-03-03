@@ -6,7 +6,7 @@
 /*   By: thsykas <thsykas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/26 21:09:11 by theo              #+#    #+#             */
-/*   Updated: 2026/02/28 13:15:20 by thsykas          ###   ########.fr       */
+/*   Updated: 2026/03/03 15:18:06 by thsykas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,12 @@ int	start_thread(t_table *table)
 		table->coders[i].last_compile = start_time;
 		if (pthread_create(&table->coders[i].thread, NULL, &coders_routine,
 			&table->coders[i])) //exec
-			return (1); 
+			return (1);
 		i++;
 	}
+	if (pthread_create(&table->monitoring_thread, NULL, &monitoring, table))
+		return (1);
+	pthread_join(table->monitoring_thread, NULL);
 	i = 0;
 	while (i < table->nb_coders)
 	{

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   codexion.h                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: thsykas <thsykas@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/03 14:29:06 by thsykas           #+#    #+#             */
+/*   Updated: 2026/03/03 14:52:47 by thsykas          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef CODEXION_H
 #define CODEXION_H
 
@@ -12,12 +24,11 @@
 # include <unistd.h>
 # include <stddef.h>
 
-
 typedef struct s_dongles {
 	long			cool_down;
 	int				id_dongle;
 	bool			is_used;
-	pthread_mutex_t mutex;
+	pthread_mutex_t	mutex;
 }	t_dongles;
 
 //un coder == 2 dongle /codrs==pointeur vers 2 dongles
@@ -44,9 +55,12 @@ typedef struct s_arg {
 }	t_arg;
 
 typedef struct s_table {
+	pthread_t		monitoring_thread;
 	int				nb_coders;
-	t_coders		*coders;
 	t_dongles		*dongles;
+	bool			burnout;
+	pthread_mutex_t	mutex_global;
+	t_coders		*coders;
 	long			time;
 	t_arg			arg;
 }	t_table;
@@ -69,6 +83,7 @@ int		ft_isdigit(int c);
 
 //thread.c
 int		start_thread(t_table *table);
+void	*monitoring(void *arg);
 
 //init.c
 int		init_coders(t_table *table);

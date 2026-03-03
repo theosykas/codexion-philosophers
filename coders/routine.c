@@ -6,7 +6,7 @@
 /*   By: thsykas <thsykas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/28 13:14:47 by thsykas           #+#    #+#             */
-/*   Updated: 2026/03/02 15:42:34 by thsykas          ###   ########.fr       */
+/*   Updated: 2026/03/03 14:52:35 by thsykas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,42 @@ int	is_active(t_coders *coders)
 	return (1);
 }
 
+void	*monitoring(void *arg)
+{
+	t_table	*table = (t_table *)arg;
+	long	current_time;
+	int		i;
+
+	while (1)
+	{
+		i = 0;
+		while (i < table->nb_coders)
+		{
+			current_time = get_time();
+			if (current_time - table->coders[i].last_compile > table->arg.time_to_burn_out)
+			{
+				current_time = get_time() - table->time;
+				pthread_mutex_lock(&table->mutex_global);
+				printf("%ld %d burned out\n", current_time, table->coders[i].id_coders);
+				table->burnout = true; // burned out
+				pthread_mutex_unlock(&table->mutex_global);
+				return (NULL); // true burn out
+			}
+			i++;
+		}
+		usleep(500);
+	}
+	return (NULL);
+}
+
 void	*coders_routine(void *arg)
 {
 	t_coders	*coders = (t_coders *)arg;
 
 	while (is_active(coders))
 	{
+		if (coders->table->burnout)
+			break;
 		take_dongle(coders);
 		print_state(coders, "is compiling");
 		usleep(coders->table->arg.time_to_compile * 1000); // 10000 conv ms/ arg[3] = 48 = usleep(480000)
@@ -39,9 +69,6 @@ void	*coders_routine(void *arg)
 	return (NULL);
 }
 
-// print_state(coders, "burned out");
-// usleep(coders->table->arg.time_to_burn_out * 1000);
-
 void	take_dongle(t_coders *coders)
 {
 	t_dongles	*left;
@@ -54,19 +81,19 @@ void	take_dongle(t_coders *coders)
 	{
 		pthread_mutex_lock(&left->mutex);
 		current_time = get_time() - coders->table->time;
-		printf("%ld %d has taken a dongle\n",current_time, coders->id_coders);
+		print_state(coders, "has taken a dongle");
 		pthread_mutex_lock(&right->mutex);
 		current_time = get_time() - coders->table->time;
-		printf("%ld %d has taken a dongle\n",current_time, coders->id_coders);
+		print_state(coders, "has taken a dongle");
 	}
 	else
 	{
 		pthread_mutex_lock(&right->mutex);
 		current_time = get_time() - coders->table->time;
-		printf("%ld %d has taken a dongle\n",current_time, coders->id_coders);
+		print_state(coders, "has taken a dongle");
 		pthread_mutex_lock(&left->mutex);
 		current_time = get_time() - coders->table->time;
-		printf("%ld %d has taken a dongle\n", current_time, coders->id_coders);
+		print_state(coders, "has taken a dongle");
 	}
 }
 
@@ -74,6 +101,9 @@ void	print_state(t_coders *coders, char *state)
 {
 	long current_time;
 
-	current_time = get_time() - coders->table->time;
-	printf("%ld %d %s\n", current_time, coders->id_coders, state);
+	if (!coders->table->burnout)
+	{
+		current_time = get_time() - coders->table->time;
+		printf("%ld %d %s\n", current_time, coders->id_coders, state);
+	}
 }
