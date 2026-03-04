@@ -6,7 +6,7 @@
 /*   By: thsykas <thsykas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/03 14:29:06 by thsykas           #+#    #+#             */
-/*   Updated: 2026/03/03 14:52:47 by thsykas          ###   ########.fr       */
+/*   Updated: 2026/03/04 16:30:39 by thsykas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,12 +35,13 @@ typedef struct s_dongles {
 typedef struct s_coders { // 1 coders/son_mutex
 	int				id_coders;
 	int				nb_compile;
-	int				last_compile;
+	long			last_compile;
 	t_dongles		*left_dongle;
 	t_dongles		*right_dongle;
 	pthread_t		thread;
 	pthread_mutex_t	mutex;
 	struct s_table	*table;
+	bool			burnout;
 }	t_coders;
 
 typedef struct s_arg {
@@ -55,13 +56,12 @@ typedef struct s_arg {
 }	t_arg;
 
 typedef struct s_table {
-	pthread_t		monitoring_thread;
+	// pthread_t		monitoring_thread;
 	int				nb_coders;
 	t_dongles		*dongles;
-	bool			burnout;
 	pthread_mutex_t	mutex_global;
 	t_coders		*coders;
-	long			time;
+	long			start_time;
 	t_arg			arg;
 }	t_table;
 
@@ -95,5 +95,6 @@ void	print_state(t_coders *coders, char *state);
 void	take_dongle(t_coders *coders);
 void	*coders_routine(void *arg);
 int		is_active(t_coders *coders);
+int		check_burnedout(t_coders *coders);
 
 #endif

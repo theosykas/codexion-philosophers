@@ -6,7 +6,7 @@
 /*   By: thsykas <thsykas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/26 21:07:26 by theo              #+#    #+#             */
-/*   Updated: 2026/03/03 15:14:27 by thsykas          ###   ########.fr       */
+/*   Updated: 2026/03/04 16:32:18 by thsykas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ int	init_coders(t_table *table)
 	{
 		table->coders[i].id_coders = i + 1; // id_1/2.. start 1
 		table->coders[i].nb_compile = 0;
+		table->coders[i].burnout = false;
 		table->coders[i].last_compile = get_time();
 		table->coders[i].left_dongle = &table->dongles[i];
 		table->coders[i].right_dongle = &table->dongles[(i + 1) % table->nb_coders];
@@ -49,8 +50,7 @@ int	init_dongle(t_table *table)
 
 int	init_table(t_table *table)
 {
-	table->time = get_time();
-	table->burnout = false;
+	table->start_time = get_time();
 	table->coders = ft_calloc(sizeof(t_coders), table->nb_coders);
 	if (!table->coders)
 		return (1);
