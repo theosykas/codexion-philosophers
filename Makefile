@@ -11,7 +11,7 @@ SRCS = coders/codexion.c \
 		coders/parser.c \
 		coders/init.c \
 		coders/threads.c \
-		coders/routine.c
+		coders/routine_nis.c \
 
 OBJS = $(SRCS:.c=.o)
 
@@ -31,8 +31,8 @@ clean:
 fclean: clean
 	@$(RM) $(NAME)
 
-# sanitize: CFLAGS += -g -fsanitize=thread
-# sanitize: re
+sanitize: CFLAGS += -g -fsanitize=thread
+sanitize: re
 
 re: fclean all
 

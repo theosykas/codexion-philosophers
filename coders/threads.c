@@ -6,7 +6,7 @@
 /*   By: thsykas <thsykas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/26 21:09:11 by theo              #+#    #+#             */
-/*   Updated: 2026/03/04 16:32:51 by thsykas          ###   ########.fr       */
+/*   Updated: 2026/03/05 14:47:49 by thsykas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ int	start_thread(t_table *table)
 			return (1);
 		i++;
 	}
+	monitoring(table->coders);
 	i = 0;
 	while (i < table->nb_coders)
 	{
@@ -34,4 +35,11 @@ int	start_thread(t_table *table)
 		i++;
 	}
 	return (0);
+}
+
+void	update_last_compile(t_coders *coders)
+{
+	pthread_mutex_lock(&coders->table->secure_mutex);
+	coders->last_compile = get_time();
+	pthread_mutex_unlock(&coders->table->secure_mutex);
 }

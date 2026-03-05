@@ -6,7 +6,7 @@
 /*   By: thsykas <thsykas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/26 21:07:26 by theo              #+#    #+#             */
-/*   Updated: 2026/03/04 16:32:18 by thsykas          ###   ########.fr       */
+/*   Updated: 2026/03/05 15:36:43 by thsykas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,13 +51,14 @@ int	init_dongle(t_table *table)
 int	init_table(t_table *table)
 {
 	table->start_time = get_time();
+	table->stop = 0;
 	table->coders = ft_calloc(sizeof(t_coders), table->nb_coders);
 	if (!table->coders)
 		return (1);
 	table->dongles = ft_calloc(sizeof(t_dongles), table->nb_coders);
 	if (!table->dongles)
 		return (1);
-	if (pthread_mutex_init(&table->mutex_global, NULL) != 0)
+	if (pthread_mutex_init(&table->secure_mutex, NULL) != 0)
 		return (1);
 	return (0);
 }
