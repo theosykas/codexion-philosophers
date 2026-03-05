@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: thsykas <thsykas@student.42.fr>            +#+  +:+       +#+        */
+/*   By: theo <theo@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/26 19:54:43 by theo              #+#    #+#             */
-/*   Updated: 2026/03/05 14:46:29 by thsykas          ###   ########.fr       */
+/*   Updated: 2026/03/05 18:56:32 by theo             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	ft_isdigit(int c)
 	return (0);
 }
 
-int is_num_param(char *str)
+int	is_num_param(char *str)
 {
 	int i;
 

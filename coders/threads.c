@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   threads.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: thsykas <thsykas@student.42.fr>            +#+  +:+       +#+        */
+/*   By: theo <theo@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/26 21:09:11 by theo              #+#    #+#             */
-/*   Updated: 2026/03/05 14:47:49 by thsykas          ###   ########.fr       */
+/*   Updated: 2026/03/05 18:55:56 by theo             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	start_thread(t_table *table)
 	long	start_time;
 
 	i = 0;
-	start_time = table->start_time; // get_time
+	start_time = table->start_time;
 	while (i < table->nb_coders)
 	{
 		table->coders[i].last_compile = start_time;
@@ -35,11 +35,4 @@ int	start_thread(t_table *table)
 		i++;
 	}
 	return (0);
-}
-
-void	update_last_compile(t_coders *coders)
-{
-	pthread_mutex_lock(&coders->table->secure_mutex);
-	coders->last_compile = get_time();
-	pthread_mutex_unlock(&coders->table->secure_mutex);
 }

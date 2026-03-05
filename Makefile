@@ -4,14 +4,13 @@ CC = cc
 CFLAGS = -Wall -Wextra -Werror -Icoders -pthread 
 RM = rm -f
 
-##-fsanitize=address
-
 SRCS = coders/codexion.c \
 		coders/utils.c \
-		coders/parser.c \
 		coders/init.c \
 		coders/threads.c \
-		coders/routine_nis.c \
+		coders/routine.c \
+		coders/utils_thread.c \
+		coders/state_coders.c \
 
 OBJS = $(SRCS:.c=.o)
 
