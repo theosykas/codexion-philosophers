@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: thsykas <thsykas@student.42.fr>            +#+  +:+       +#+        */
+/*   By: theo <theo@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/26 21:07:26 by theo              #+#    #+#             */
-/*   Updated: 2026/03/05 15:36:43 by thsykas          ###   ########.fr       */
+/*   Updated: 2026/03/05 19:04:35 by theo             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,8 @@ int	init_coders(t_table *table)
 		table->coders[i].burnout = false;
 		table->coders[i].last_compile = get_time();
 		table->coders[i].left_dongle = &table->dongles[i];
-		table->coders[i].right_dongle = &table->dongles[(i + 1) % table->nb_coders];
+		table->coders[i].right_dongle = &table->dongles[(i + 1) %
+			table->nb_coders];
 		table->coders[i].table = table; // acces a toute la table
 		if (pthread_mutex_init(&table->coders[i].mutex, NULL) != 0) // init utilisation lock
 			return (1);

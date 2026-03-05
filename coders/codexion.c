@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   codexion.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: thsykas <thsykas@student.42.fr>            +#+  +:+       +#+        */
+/*   By: theo <theo@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/26 19:55:43 by theo              #+#    #+#             */
-/*   Updated: 2026/03/05 09:11:31 by thsykas          ###   ########.fr       */
+/*   Updated: 2026/03/05 19:05:33 by theo             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	free_and_exit(t_table *table)
 	free(table->coders);
 }
 
-int parse_args(t_arg *arg, int ac, char **av)
+int	parse_args(t_arg *arg, int ac, char **av)
 {
 	(void)ac;
 	arg->nb_coders = atoi(av[1]);
@@ -31,9 +31,9 @@ int parse_args(t_arg *arg, int ac, char **av)
 	return (0);
 }
 
-int check_args(int ac, char **av)
+int	check_args(int ac, char **av)
 {
-	int i;
+	int	i;
 
 	i = 1;
 	if (ac != 9)
@@ -58,7 +58,7 @@ int check_args(int ac, char **av)
 	return (0);
 }
 
-int main(int ac, char **av)
+int	main(int ac, char **av)
 {
 	t_table	table;
 
@@ -75,7 +75,6 @@ int main(int ac, char **av)
 	init_coders(&table);
 	init_dongle(&table);
 	start_thread(&table);
-	// monitoring(table.coders);
 	free_and_exit(&table);
 	return (EXIT_FAILURE);
 }
