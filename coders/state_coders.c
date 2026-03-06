@@ -6,7 +6,7 @@
 /*   By: thsykas <thsykas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/06 11:07:00 by thsykas           #+#    #+#             */
-/*   Updated: 2026/03/06 12:49:20 by thsykas          ###   ########.fr       */
+/*   Updated: 2026/03/06 13:19:25 by thsykas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,13 @@ int	check_burnout(t_coders *coders, long action)
 {
 	(void)action;
 	pthread_mutex_lock(&coders->table->secure_mutex);
-	if (coders->burnout)
+	if (coders->burnout || coders->table->stop)
 	{
 		pthread_mutex_unlock(&coders->table->secure_mutex);
 		return (1);
 	}
 	pthread_mutex_unlock(&coders->table->secure_mutex);
-	return (coders->burnout);
+	return (0);
 }
 
 // (get_time() >= dongles[i]->cool_down (1100 >= 1500 == false) dongle bloquer
@@ -36,6 +36,8 @@ int	take_dongle(t_coders *coders, t_dongles *dongles[2])
 		add_waiting(coders, dongles[i]);
 		while (1)
 		{
+			if (check_burnout(coders, 0))
+				return (0);
 			pthread_mutex_lock(&dongles[i]->mutex);
 			if (!dongles[i]->is_used &&
 				(dongles[i]->waiting[0] == coders) &&
@@ -45,11 +47,12 @@ int	take_dongle(t_coders *coders, t_dongles *dongles[2])
 				dongles[i]->waiting[0] = dongles[i]->waiting[1];
 				dongles[i]->waiting[1] = NULL;
 				print_state(coders, "has taken a dongle");
+				pthread_mutex_unlock(&dongles[i]->mutex);
 				break ;
 			}
 			pthread_mutex_unlock(&dongles[i]->mutex);
+			// usleep(100);
 		}
-		pthread_mutex_unlock(&dongles[i]->mutex);
 	}
 	return (1);
 }
