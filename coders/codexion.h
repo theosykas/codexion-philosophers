@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   codexion.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: theo <theo@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: thsykas <thsykas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/03 14:29:06 by thsykas           #+#    #+#             */
-/*   Updated: 2026/03/05 19:00:54 by theo             ###   ########.fr       */
+/*   Updated: 2026/03/06 11:02:48 by thsykas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,20 +24,23 @@
 # include <unistd.h>
 # include <stddef.h>
 
+typedef struct s_coders t_coders;
+
 typedef struct s_dongles {
 	long			cool_down;
-	struct t_coders	*waiting[2];
+	long			last_drop;
+	t_coders		*waiting[2];
 	int				id_dongle;
 	bool			is_used;
 	pthread_mutex_t	mutex;
 }	t_dongles;
 
 typedef struct s_coders { // 1 coders/son_mutex
-	int				id_coders;
-	int				nb_compile;
 	long			last_compile;
 	t_dongles		*left_dongle;
 	t_dongles		*right_dongle;
+	int				nb_compile;
+	int				id_coders;
 	bool			burnout;
 	struct s_table	*table;
 	pthread_t		thread;
@@ -45,14 +48,14 @@ typedef struct s_coders { // 1 coders/son_mutex
 }	t_coders;
 
 typedef struct s_arg {
-	int		nb_coders;
+	int		number_of_compiles_required;
+	int		time_to_refactor;
 	int		time_to_burn_out;
 	int		time_to_compile;
-	int		time_to_debug;
-	int		time_to_refactor;
 	int		dongle_cooldown;
+	int		time_to_debug;
 	char	*scheduler;
-	int		number_of_compiles_required;
+	int		nb_coders;
 }	t_arg;
 
 typedef struct s_table {
@@ -91,12 +94,13 @@ void	*coders_routine(void *arg);
 void	*monitoring(void *arg);
 
 //utils_thread.c
+int		add_waiting(t_coders *coders, t_dongles *dongles);
 int		print_state(t_coders *coders, char *state);
 void	update_last_compile(t_coders *coders);
 long	get_time(void);
 
 //state_coders.c
-void	take_dongle(t_coders *coders, t_dongles *dongles[2]);
+int		take_dongle(t_coders *coders, t_dongles *dongles[2]);
 int		compiling(t_coders *coders, t_dongles *dongles[2]);
 int		check_burnout(t_coders *coders, long action);
 int		refactoring(t_coders *coders);

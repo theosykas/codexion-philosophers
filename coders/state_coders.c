@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   state_coders.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: theo <theo@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: thsykas <thsykas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/05 18:51:36 by theo              #+#    #+#             */
-/*   Updated: 2026/03/05 19:02:12 by theo             ###   ########.fr       */
+/*   Created: 2026/03/06 11:07:00 by thsykas           #+#    #+#             */
+/*   Updated: 2026/03/06 12:49:20 by thsykas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,31 +25,43 @@ int	check_burnout(t_coders *coders, long action)
 	return (coders->burnout);
 }
 
-// && dongles[i]->cool_down < get_time() && waiting[0]
-void	take_dongle(t_coders *coders, t_dongles *dongles[2])
+// (get_time() >= dongles[i]->cool_down (1100 >= 1500 == false) dongle bloquer
+int	take_dongle(t_coders *coders, t_dongles *dongles[2])
 {
-	int	i;
+	int		i;
 
 	i = -1;
 	while (++i < 2)
 	{
-		// add_waiting(coders, dongles[i]);
-		pthread_mutex_lock(&dongles[i]->mutex);
-		if (!dongles[i]->is_used)
+		add_waiting(coders, dongles[i]);
+		while (1)
 		{
-			dongles[i]->is_used = 1; //taken
-			print_state(coders, "has taken a dongle");
+			pthread_mutex_lock(&dongles[i]->mutex);
+			if (!dongles[i]->is_used &&
+				(dongles[i]->waiting[0] == coders) &&
+				(get_time() >= dongles[i]->last_drop))
+			{
+				dongles[i]->is_used = true; //taken
+				dongles[i]->waiting[0] = dongles[i]->waiting[1];
+				dongles[i]->waiting[1] = NULL;
+				print_state(coders, "has taken a dongle");
+				break ;
+			}
+			pthread_mutex_unlock(&dongles[i]->mutex);
 		}
 		pthread_mutex_unlock(&dongles[i]->mutex);
 	}
+	return (1);
 }
 
+//100ms (get_time()) + dongle_cool_down = 500
+//dongle_cool[i] = 1000 + 500
 int	compiling(t_coders *coders, t_dongles *dongles[2])
 {
 	int	i;
 
 	i = -1;
-	if (check_burnout(coders, 0)) /// 0 pour recompiler 
+	if (check_burnout(coders, 0)) /// 0 pour recompiler
 		return (0);
 	update_last_compile(coders);
 	if (!print_state(coders, "is compiling"))
@@ -59,6 +71,7 @@ int	compiling(t_coders *coders, t_dongles *dongles[2])
 	{
 		pthread_mutex_lock(&dongles[i]->mutex);
 		dongles[i]->is_used = false; //drop
+		dongles[i]->last_drop = get_time() + coders->table->arg.dongle_cooldown;//lock dongle -> que le temps passe 
 		pthread_mutex_unlock(&dongles[i]->mutex);
 	}
 	pthread_mutex_lock(&coders->table->secure_mutex);

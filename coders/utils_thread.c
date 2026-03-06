@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_thread.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: theo <theo@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: thsykas <thsykas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/05 18:52:18 by theo              #+#    #+#             */
-/*   Updated: 2026/03/05 18:56:05 by theo             ###   ########.fr       */
+/*   Updated: 2026/03/06 11:15:07 by thsykas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,4 +41,15 @@ long	get_time(void)
 		return (0);
 	time_in_ms = (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
 	return (time_in_ms);
+}
+
+int	add_waiting(t_coders *coders, t_dongles *dongles)
+{
+	pthread_mutex_lock(&dongles->mutex);
+	if (dongles->waiting[0] == NULL)
+		dongles->waiting[0] = coders;
+	else
+		dongles->waiting[1] = coders;
+	pthread_mutex_unlock(&dongles->mutex);
+	return (0);
 }

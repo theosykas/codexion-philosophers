@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   routine.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: theo <theo@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: thsykas <thsykas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/05 14:11:16 by thsykas           #+#    #+#             */
-/*   Updated: 2026/03/05 19:02:27 by theo             ###   ########.fr       */
+/*   Updated: 2026/03/06 12:47:59 by thsykas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	*monitoring(void *arg)
 				pthread_mutex_lock(&coders->table->secure_mutex);
 				coders[i].burnout = true; // burned out
 				printf("%ld %d burned out\n", get_time() - coders[i].table->start_time, coders[i].id_coders);
-				coders->table->stop = 1; // stop write 
+				coders->table->stop = 1; // stop write
 				pthread_mutex_unlock(&coders->table->secure_mutex);
 				return (NULL);
 			}
@@ -57,11 +57,12 @@ void	*coders_routine(void *arg)
 	t_coders	*coders = (t_coders *)arg;
 	t_dongles	*dongles[2];
 
-	dongles[coders->id_coders & 1] = coders->left_dongle; // 1 = 00000001 & 1 // pair impair
-	dongles[!(coders->id_coders & 1)] = coders->right_dongle;
+	dongles[coders->id_coders & 1] = coders->right_dongle; // 1 = 00000001 & 1 // pair impair
+	dongles[!(coders->id_coders & 1)] = coders->left_dongle;
 	while (is_active(coders))
 	{
-		take_dongle(coders, dongles);
+		if (!take_dongle(coders, dongles))
+			break;
 		if (!compiling(coders, dongles))
 			break;
 		if (!debbuging(coders))
