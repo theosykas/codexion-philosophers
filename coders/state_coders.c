@@ -6,7 +6,7 @@
 /*   By: thsykas <thsykas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/06 11:07:00 by thsykas           #+#    #+#             */
-/*   Updated: 2026/03/06 13:19:25 by thsykas          ###   ########.fr       */
+/*   Updated: 2026/03/06 15:56:14 by thsykas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,6 @@ int	take_dongle(t_coders *coders, t_dongles *dongles[2])
 				break ;
 			}
 			pthread_mutex_unlock(&dongles[i]->mutex);
-			// usleep(100);
 		}
 	}
 	return (1);

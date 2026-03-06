@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: thsykas <thsykas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/05 18:52:18 by theo              #+#    #+#             */
-/*   Updated: 2026/03/06 11:15:07 by thsykas          ###   ########.fr       */
+/*   Created: 2026/03/06 15:54:21 by thsykas           #+#    #+#             */
+/*   Updated: 2026/03/06 16:03:06 by thsykas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,11 +45,24 @@ long	get_time(void)
 
 int	add_waiting(t_coders *coders, t_dongles *dongles)
 {
+	t_coders	*tmp;
+
 	pthread_mutex_lock(&dongles->mutex);
 	if (dongles->waiting[0] == NULL)
 		dongles->waiting[0] = coders;
 	else
+	{
 		dongles->waiting[1] = coders;
+		if (coders->table->arg.scheduler)
+		{
+			if (dongles->waiting[1]->burnout < dongles->waiting[0]->burnout) // nourrir le plus proche du burn out
+			{
+				tmp = dongles->waiting[0];
+				dongles->waiting[0] = dongles->waiting[1];
+				dongles->waiting[1] = tmp;
+			}
+		}
+	}
 	pthread_mutex_unlock(&dongles->mutex);
 	return (0);
 }
